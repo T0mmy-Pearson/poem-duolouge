@@ -1,0 +1,216 @@
+:root {
+  font-family: Comfortaa, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  display: grid;
+  width: calc(100vw - 0px);
+  height: calc(100vh - 0px);
+  background-color: rgb(253, 233, 234);
+  margin: 0px;
+  padding: 0px;
+}
+.text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0;
+  padding: 1vw;
+  font-size: 4vw;
+  width: auto;
+  max-width: 40vw;
+  position: absolute;
+}
+
+/* Static lines that have already appeared */
+.text.static {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animate only the current line appearing */
+.text.animate {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Color variations for alternating text */
+.text.color-0 {
+  color: black;
+  text-shadow: 0 0 0.25vw rgba(0, 0, 0, 0.3);
+}
+
+.text.color-1 {
+  color: white;
+  text-shadow: 0 0 0.25vw rgba(255, 255, 255, 0.5);
+}
+
+.text.color-2 {
+  color: rgb(0, 0, 0);
+  text-shadow: 0 0 0.25vw rgb(161, 161, 208);
+}
+
+.text.color-3 {
+  color: rgb(255, 255, 255);
+  text-shadow: 0 0 0.25vw rgb(208, 161, 161);
+}
+
+.text.color-4 {
+  color: rgb(255, 255, 255);
+  text-shadow: 0 0 0.25vw rgb(161, 208, 161);
+}
+
+.text.color-5 {
+  color: rgb(0, 0, 0);
+  text-shadow: 0 0 0.25vw rgb(208, 161, 208);
+}
+
+/* Fade in and slide up animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Alternative typewriter effect for individual characters */
+.text.typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid rgb(47, 47, 118);
+  animation: typing 1.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: rgb(47, 47, 118); }
+}
+
+/* Smooth scroll behavior for container */
+
+#container {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+
+/* Alternative smooth effects - you can toggle between these */
+
+/* Glow effect that appears gradually */
+.text.glow {
+  animation: fadeInGlow 1.2s ease-out forwards;
+}
+
+@keyframes fadeInGlow {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.95);
+    text-shadow: 0 0 0 rgb(161, 161, 208);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    text-shadow: 0 0 0.25vw rgb(161, 161, 208);
+  }
+}
+
+/* Slide in from left effect */
+.text.slide-left {
+  animation: slideFromLeft 0.9s ease-out forwards;
+}
+
+@keyframes slideFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale and fade effect */
+.text.scale-fade {
+  animation: scaleFade 1s ease-out forwards;
+}
+
+@keyframes scaleFade {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Smooth transitions for any hover effects */
+.text {
+  transition: all 0.3s ease;
+}
+
+.text:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.text.color-0:hover {
+  text-shadow: 0 0 0.4vw rgba(0, 0, 0, 0.5);
+}
+
+.text.color-1:hover {
+  text-shadow: 0 0 0.4vw rgba(255, 255, 255, 0.7);
+}
+
+.text.color-2:hover {
+  text-shadow: 0 0 0.4vw rgb(161, 161, 208);
+}
+
+.text.color-3:hover {
+  text-shadow: 0 0 0.4vw rgb(208, 161, 161);
+}
+
+.text.color-4:hover {
+  text-shadow: 0 0 0.4vw rgb(161, 208, 161);
+}
+
+.text.color-5:hover {
+  text-shadow: 0 0 0.4vw rgb(208, 161, 208);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+}
