@@ -3,24 +3,23 @@ import { useState, useEffect, useRef } from "react";
 function App() {
   const [poemArr, setPoemArr] = useState([]);
   const [isSpinning, setIsSpinning] = useState(false);
-  const [selectedLines, setSelectedLines] = useState([[], [], []]); // Arrays of lines for each column
-  const [spinResults, setSpinResults] = useState([0, 0, 0]); // Final positions for each reel
+  const [selectedLines, setSelectedLines] = useState([[], [], []]);
   const containerRef = useRef(null);
+  const fruitIconsRef = useRef(null);
 
   useEffect(() => {
     fetch("./Duolouge.json")
       .then((res) => res.json())
       .then((data) => {
         setPoemArr(data);
-        // Initialize with first few lines for each column
         const getRandomLines = (count) => {
           const shuffled = [...data].sort(() => 0.5 - Math.random());
           return shuffled.slice(0, count);
         };
         setSelectedLines([
-          getRandomLines(5),
-          getRandomLines(5), 
-          getRandomLines(5)
+          getRandomLines(8),
+          getRandomLines(8), 
+          getRandomLines(8)
         ]);
       });
   }, []);
@@ -30,9 +29,24 @@ function App() {
     
     setIsSpinning(true);
     
+    // Fruit icon rotation animation
+    if (fruitIconsRef.current) {
+      let rotation = 0;
+      const fruitAnimation = setInterval(() => {
+        rotation += 15;
+        fruitIconsRef.current.style.transform = `rotate(${rotation}deg)`;
+      }, 50);
+      
+      setTimeout(() => {
+        clearInterval(fruitAnimation);
+        if (fruitIconsRef.current) {
+          fruitIconsRef.current.style.transform = 'rotate(0deg)';
+        }
+      }, 2500);
+    }
 
     const getRandomLinesForReel = () => {
-      const numLines = 7 + Math.floor(Math.random() * 3); // 5-7 lines
+      const numLines = 8 + Math.floor(Math.random() * 3); // 8-10 lines per reel
       const shuffled = [...poemArr].sort(() => 0.5 - Math.random());
       return shuffled.slice(0, numLines);
     };
@@ -42,7 +56,6 @@ function App() {
       getRandomLinesForReel(),
       getRandomLinesForReel()
     ];
-    
 
     setTimeout(() => {
       setSelectedLines(newResults);
@@ -62,27 +75,39 @@ function App() {
     };
     
     window.addEventListener("keydown", handleKeyPress);
-    window.addEventListener("mousedown", spinSlotMachine);
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
-      window.removeEventListener("mousedown", spinSlotMachine);
     };
   }, [poemArr.length, isSpinning]);
 
   return (
     <div className="slot-machine">
-      <div className="slot-header">
-        <h1>A Duologue on You</h1>
-        <div className={`fruit-icons ${isSpinning ? 'spinning' : ''}`}></div>
-        <button 
-          className="spin-button" 
-          onClick={spinSlotMachine}
-          disabled={isSpinning}
-        >
-          {isSpinning ? 'Spinning...' : 'Spin'}
-        </button>
+      <div className="lever-instruction">
+          {isSpinning ? '🎲 Spinning...' : '🎯 Pull the lever!'}
+        </div>
+      <div 
+        className={`slot-lever clickable ${isSpinning ? 'spinning' : ''}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          spinSlotMachine();
+        }}
+        onTouchStart={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          spinSlotMachine();
+        }}
+        style={{ cursor: isSpinning ? 'not-allowed' : 'pointer' }}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            spinSlotMachine();
+          }
+        }}
+      >
+        <div className={`lever-handle ${isSpinning ? 'pulled' : ''}`}></div>
       </div>
-      
       <div id="container" ref={containerRef}>
         {[0, 1, 2].map((columnIndex) => (
           <div 
@@ -94,21 +119,19 @@ function App() {
           >
             <div className="reel-content">
               {isSpinning ? (
-                // Show multiple lines scrolling during spin
                 poemArr.map((line, i) => (
                   <p 
                     key={i}
-                    className={`text reel-line color-${i % 6}`}
+                    className="text reel-line"
                   >
                     {line}
                   </p>
                 ))
               ) : (
-                // Show multiple selected lines when not spinning
                 selectedLines[columnIndex] && selectedLines[columnIndex].map((line, lineIndex) => (
                   <p 
                     key={lineIndex}
-                    className={`text selected-line color-${lineIndex % 6}`}
+                    className="text selected-line"
                     style={{
                       animationDelay: `${lineIndex * 0.1}s`
                     }}
@@ -120,6 +143,9 @@ function App() {
             </div>
           </div>
         ))}
+      </div>
+       <div className="slot-header">
+        <h1>🎰 A Duologue on You 🎰</h1>
       </div>
     </div>
   );
